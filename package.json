@@ -1,0 +1,19 @@
+{
+  "name": "redux-ssr-thunk",
+  "version": "1.0.0",
+  "description": "针对ssr模式增强redux-thunk,实现数据耦合初始化",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/189877071/redux-ssr-thunk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/189877071/redux-ssr-thunk/issues"
+  },
+  "homepage": "https://github.com/189877071/redux-ssr-thunk#readme"
+}
