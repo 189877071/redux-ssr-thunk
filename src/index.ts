@@ -38,13 +38,13 @@ function createThunkMiddleware(isSsr: boolean = true) {
     };
 }
 
-const Thunk  = createThunkMiddleware
+const thunk  = createThunkMiddleware
 
 const execute = () => new Promise(resolve => flushInitializers(ACTION_PROMISES).then(() => {
     resolve(stateExtends && stateExtends())
 }))
 
 export = {
-    Thunk,
+    thunk,
     execute
 }

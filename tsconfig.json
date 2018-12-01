@@ -5,9 +5,10 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "outDir": "dist",
+        "outDir": "lib",
         "lib": [ "es2015"],
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "declaration": true
     },
     "include": [
         "src/**/*"
