@@ -1,6 +1,36 @@
-let ACTION_PROMISES: (() =>  Promise<any>)[] = []
+interface objType {
+    [str: string]: any
+}
 
-let stateExtends: () => any
+const obj: objType = {
+    ACTION_PROMISES: [],
+    stateExtends: undefined,
+    thunk(isSsr?: boolean) {
+        return (store: any) => (next: any) => (action: any) => {
+            const { dispatch, getState } = store
+
+            obj.stateExtends = getState
+
+            if (typeof action === 'function') {
+                if (isSsr) {
+                    const newAction = async () => {
+                        await action(dispatch, getState)
+                    }
+                    obj.ACTION_PROMISES.push(newAction)
+                    return newAction
+                }
+                else {
+                    return action(dispatch, getState)
+                }
+            }
+
+            return next(action)
+        };
+    },
+    execute() {
+        return new Promise(resolve => flushInitializers(obj.ACTION_PROMISES).then(() => resolve(obj.stateExtends && obj.stateExtends())))
+    }
+}
 
 function flushInitializers(initializers: (() => Promise<any>)[]): Promise<any> {
     let promises: Promise<any>[] = []
@@ -15,36 +45,4 @@ function flushInitializers(initializers: (() => Promise<any>)[]): Promise<any> {
     });
 }
 
-function createThunkMiddleware(isSsr?: boolean) {
-    return (obj: any) => (next: any) => (action: any) => {
-        const { dispatch, getState } = obj
-        
-        stateExtends = getState
-
-        if (typeof action === 'function') {
-            if(isSsr) {
-                const newAction = async () =>  {
-                    await action(dispatch, getState)
-                }
-                ACTION_PROMISES.push(newAction)
-                return newAction
-            }
-            else {
-                return action(dispatch, getState)
-            }
-        }
-
-        return next(action)
-    };
-}
-
-const thunk  = createThunkMiddleware
-
-const execute = () => new Promise(resolve => flushInitializers(ACTION_PROMISES).then(() => {
-    resolve(stateExtends && stateExtends())
-}))
-
-export = {
-    thunk,
-    execute
-}
+export = obj
