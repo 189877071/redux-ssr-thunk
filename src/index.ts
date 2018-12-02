@@ -15,7 +15,7 @@ function flushInitializers(initializers: (() => Promise<any>)[]): Promise<any> {
     });
 }
 
-function createThunkMiddleware(isSsr: boolean = true) {
+function createThunkMiddleware(isSsr?: boolean) {
     return (obj: any) => (next: any) => (action: any) => {
         const { dispatch, getState } = obj
         
