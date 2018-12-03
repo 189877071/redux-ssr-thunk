@@ -1,37 +1,3 @@
-interface objType {
-    [str: string]: any
-}
-
-const obj: objType = {
-    ACTION_PROMISES: [],
-    stateExtends: undefined,
-    thunk(isSsr?: boolean) {
-        return (store: any) => (next: any) => (action: any) => {
-            const { dispatch, getState } = store
-
-            obj.stateExtends = getState
-
-            if (typeof action === 'function') {
-                if (isSsr) {
-                    const newAction = async () => {
-                        await action(dispatch, getState)
-                    }
-                    obj.ACTION_PROMISES.push(newAction)
-                    return newAction
-                }
-                else {
-                    return action(dispatch, getState)
-                }
-            }
-
-            return next(action)
-        };
-    },
-    execute() {
-        return new Promise(resolve => flushInitializers(obj.ACTION_PROMISES).then(() => resolve(obj.stateExtends && obj.stateExtends())))
-    }
-}
-
 function flushInitializers(initializers: (() => Promise<any>)[]): Promise<any> {
     let promises: Promise<any>[] = []
     while (initializers.length) {
@@ -45,4 +11,40 @@ function flushInitializers(initializers: (() => Promise<any>)[]): Promise<any> {
     });
 }
 
-export = obj
+class ThunkMiddleware {
+
+    constructor(private _isSSR: boolean = undefined) { }
+
+    private _actions: (() => Promise<any>)[] = []
+
+    private _getState: (() => any) | undefined = undefined
+
+    thunk() {
+        return (store: any) => (next: any) => (action: any) => {
+            const { dispatch, getState } = store
+
+            this._getState = getState
+
+            if (typeof action === 'function') {
+                if (this._isSSR) {
+                    const newAction = async () => await action(dispatch, getState)
+
+                    this._actions.push(newAction)
+                    
+                    return newAction
+                }
+                else {
+                    return action(dispatch, getState)
+                }
+            }
+
+            return next(action)
+        };
+    }
+
+    execute() {
+        return new Promise(resolve => flushInitializers(this._actions).then(() => resolve(this._getState && this._getState())))
+    }
+}
+
+export = ThunkMiddleware
