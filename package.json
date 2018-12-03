@@ -1,6 +1,6 @@
 {
   "name": "redux-ssr-thunk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "针对ssr模式增强redux-thunk,实现数据耦合初始化",
   "main": "lib/index.js",
   "scripts": {
