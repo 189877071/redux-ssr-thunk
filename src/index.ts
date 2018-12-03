@@ -11,7 +11,7 @@ function flushInitializers(initializers: (() => Promise<any>)[]): Promise<any> {
     });
 }
 
-class ThunkMiddleware {
+class CreateThunkMiddleware {
 
     constructor(private _isSSR: boolean = undefined) { }
 
@@ -19,27 +19,25 @@ class ThunkMiddleware {
 
     private _getState: (() => any) | undefined = undefined
 
-    thunk() {
-        return (store: any) => (next: any) => (action: any) => {
-            const { dispatch, getState } = store
+    thunk = (store: any) => (next: any) => (action: any) => {
+        const { dispatch, getState } = store
 
-            this._getState = getState
+        this._getState = getState
 
-            if (typeof action === 'function') {
-                if (this._isSSR) {
-                    const newAction = async () => await action(dispatch, getState)
+        if (typeof action === 'function') {
+            if (this._isSSR) {
+                const newAction = async () => await action(dispatch, getState)
 
-                    this._actions.push(newAction)
-                    
-                    return newAction
-                }
-                else {
-                    return action(dispatch, getState)
-                }
+                this._actions.push(newAction)
+
+                return newAction
             }
+            else {
+                return action(dispatch, getState)
+            }
+        }
 
-            return next(action)
-        };
+        return next(action)
     }
 
     execute() {
@@ -47,4 +45,4 @@ class ThunkMiddleware {
     }
 }
 
-export = ThunkMiddleware
+export = CreateThunkMiddleware

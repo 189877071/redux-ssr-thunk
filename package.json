@@ -1,7 +1,7 @@
 {
   "name": "redux-ssr-thunk",
-  "version": "1.0.4",
-  "description": "针对ssr模式增强redux-thunk,实现数据耦合初始化",
+  "version": "1.0.5",
+  "description": "作用与redux-thunk一至,提供了服务器端渲染（ssr）action数据请求，异步执行api",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
