@@ -1,6 +1,6 @@
 {
   "name": "redux-ssr-thunk",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "作用与redux-thunk一至,提供了服务器端渲染（ssr）action数据请求，异步执行api",
   "main": "lib/index.js",
   "scripts": {
