@@ -41,7 +41,7 @@ class CreateThunkMiddleware {
     }
 
     execute() {
-        return new Promise(resolve => flushInitializers(this._actions).then(() => resolve(this._getState && this._getState())))
+        return new Promise(resolve => flushInitializers(this._actions).then(() => resolve(this._getState && this._getState()), resolve))
     }
 }
 
